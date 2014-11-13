@@ -667,3 +667,31 @@ static void *NSObjectKVOControllerNonRetainingKey = &NSObjectKVOControllerNonRet
 
 @end
 
+
+@implementation FBKVOController (ExtendedAPI)
+
+- (void)observeAndExecute:(id)object keyPath:(NSString *)keyPath block:(FBKVOSimpleNotificationBlock)block
+{
+  block(self.observer, object);
+  return [self observe:object keyPath:keyPath block:block];
+}
+
+- (void)observe:(id)object keyPath:(NSString *)keyPath block:(FBKVOSimpleNotificationBlock)block
+{
+  return [self observe:object keyPath:keyPath options:0 block:^(id observer, id object, NSDictionary *change) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      block(observer, object);
+    });
+  }];
+}
+
+- (void)observe:(id)object keyPaths:(NSArray *)keyPaths block:(FBKVOSimpleNotificationBlock)block
+{
+  return [self observe:object keyPaths:keyPaths options:0 block:^(id observer, id object, NSDictionary *change) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      block(observer, object);
+    });
+  }];
+}
+
+@end

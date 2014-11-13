@@ -147,3 +147,16 @@ typedef void (^FBKVONotificationBlock)(id observer, id object, NSDictionary *cha
 @property (nonatomic, strong) FBKVOController *KVOControllerNonRetaining;
 
 @end
+
+typedef void (^FBKVOSimpleNotificationBlock)(id observer, id object);
+
+
+@interface FBKVOController (ExtendedAPI)
+
+- (void)observeAndExecute:(id)object keyPath:(NSString *)keyPath block:(FBKVOSimpleNotificationBlock)block;
+
+- (void)observe:(id)object keyPath:(NSString *)keyPath block:(FBKVOSimpleNotificationBlock)block;
+- (void)observe:(id)object keyPaths:(NSArray *)keyPaths block:(FBKVOSimpleNotificationBlock)block;
+
+@end
+
