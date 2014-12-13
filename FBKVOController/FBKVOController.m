@@ -679,8 +679,13 @@ static void *NSObjectKVOControllerNonRetainingKey = &NSObjectKVOControllerNonRet
 - (void)observe:(id)object keyPath:(NSString *)keyPath block:(FBKVOSimpleNotificationBlock)block
 {
   return [self observe:object keyPath:keyPath options:0 block:^(id observer, id object, NSDictionary *change) {
+    __weak id wobserver = observer;
+    __weak id wobject = object;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-      block(observer, object);
+      if (wobserver && wobject) {
+        block(wobserver, wobject);
+      }
     });
   }];
 }
@@ -688,8 +693,11 @@ static void *NSObjectKVOControllerNonRetainingKey = &NSObjectKVOControllerNonRet
 - (void)observe:(id)object keyPaths:(NSArray *)keyPaths block:(FBKVOSimpleNotificationBlock)block
 {
   return [self observe:object keyPaths:keyPaths options:0 block:^(id observer, id object, NSDictionary *change) {
+    __weak id wobserver = observer;
+    __weak id wobject = object;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-      block(observer, object);
+      block(wobserver, wobject);
     });
   }];
 }
